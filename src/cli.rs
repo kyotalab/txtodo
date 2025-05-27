@@ -1,0 +1,62 @@
+use clap::{Parser, Subcommand};
+
+use crate::{add_handler, priority_handler};
+
+#[derive(Parser)]
+pub struct Cli {
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+pub enum Commands {
+    #[command(name = "add")]
+    Add {
+        todo: String,
+        project: Option<String>,
+        context: Option<String>,
+    },
+    #[command(name = "pri")]
+    Priority {
+        id: String,
+        priority: Option<String>, // 優先度はOption
+    },
+    // #[command(name = "due")]
+    // Due {
+    //     id: String,
+    //     due_date: Option<String>, // 期限は設定してないけど、いずれやらないといけないtodoを表現できるようにOptionにする
+    // },
+    // #[command(name = "mod")]
+    // Modify {
+    //     id: String,
+    //     todo: Option<String>,
+    //     project: Option<String>,
+    //     context: Option<String>,
+    // },
+    // #[command(name = "start")]
+    // Start { id: String },
+    // #[command(name = "done")]
+    // Done { id: String },
+    // #[command(name = "ls")]
+    // List {
+    //     #[arg(short = 'p', long = "project")]
+    //     project: Option<String>,
+    //     #[arg(short = 'c', long = "context")]
+    //     context: Option<String>,
+    // },
+}
+
+pub fn dispatch(cli: Cli) {
+    match cli.command {
+        Commands::Add {
+            todo,
+            project,
+            context,
+        } => {
+            add_handler(todo, project, context).expect("error");
+        }
+        Commands::Priority { id, priority } => {
+            priority_handler(&id, priority);
+        }
+    }
+}
