@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 
-use crate::{add_handler, list_handler, priority_handler};
+use crate::{add_handler, due_handler, list_handler, priority_handler};
 
 #[derive(Parser)]
 pub struct Cli {
@@ -18,11 +18,11 @@ pub enum Commands {
     },
     #[command(name = "pri")]
     Priority { id: String, priority: String },
-    // #[command(name = "due")]
-    // Due {
-    //     id: String,
-    //     due_date: Option<String>, // 期限は設定してないけど、いずれやらないといけないtodoを表現できるようにOptionにする
-    // },
+    #[command(name = "due")]
+    Due {
+        id: String,
+        due_date: Option<String>, // 期限は設定してないけど、いずれやらないといけないtodoを表現できるようにOptionにする
+    },
     // #[command(name = "mod")]
     // Modify {
     //     id: String,
@@ -58,6 +58,22 @@ pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
             let todo = priority_handler(&id, priority)?;
             if let Some(exist) = todo {
                 println!("{exist}");
+                let priority = exist.priority;
+                if let Some(pri) = priority {
+                    println!("TODO: {} prioritized ({}).", exist.id, pri);
+                }
+            }
+            Ok(())
+        }
+        Commands::Due { id, due_date } => {
+            let todo = due_handler(&id, due_date)?;
+            if let Some(exist) = todo {
+                println!("{exist}");
+                let due_date = exist.due_date;
+                if let Some(due) = due_date {
+                    let due_date = due.format("%Y-%m-%d").to_string();
+                    println!("TODO: {} due date set to {}.", exist.id, due_date);
+                }
             }
             Ok(())
         }

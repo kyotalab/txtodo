@@ -1,6 +1,6 @@
 use std::fmt;
 
-use chrono::NaiveDateTime;
+use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -10,7 +10,7 @@ pub struct Todo {
     pub priority: Option<Priority>,
     pub projects: Vec<String>,
     pub contexts: Vec<String>,
-    pub due_date: Option<NaiveDateTime>,
+    pub due_date: Option<NaiveDate>,
     pub created_at: NaiveDateTime,
     pub end_date: Option<NaiveDateTime>,
     pub is_done: bool,
@@ -82,9 +82,16 @@ impl fmt::Display for Todo {
         write!(f, "{} ", contexts)?;
 
         if let Some(due) = self.due_date {
-            writeln!(f, "due:{} ", NaiveDateTime::format(&due, "%Y-%m-%d"))?;
+            writeln!(f, "due:{} ", NaiveDate::format(&due, "%Y-%m-%d"))?;
         }
 
+        Ok(())
+    }
+}
+
+impl fmt::Display for Priority {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", &self)?;
         Ok(())
     }
 }
