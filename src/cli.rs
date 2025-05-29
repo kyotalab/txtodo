@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 
-use crate::{add_handler, priority_handler};
+use crate::{add_handler, list_handler, priority_handler};
 
 #[derive(Parser)]
 pub struct Cli {
@@ -16,11 +16,11 @@ pub enum Commands {
         project: Option<String>,
         context: Option<String>,
     },
-    #[command(name = "pri")]
-    Priority {
-        id: String,
-        priority: Option<String>, // 優先度はOption
-    },
+    // #[command(name = "pri")]
+    // Priority {
+    //     id: String,
+    //     priority: Option<String>, // 優先度はOption
+    // },
     // #[command(name = "due")]
     // Due {
     //     id: String,
@@ -37,26 +37,30 @@ pub enum Commands {
     // Start { id: String },
     // #[command(name = "done")]
     // Done { id: String },
-    // #[command(name = "ls")]
-    // List {
-    //     #[arg(short = 'p', long = "project")]
-    //     project: Option<String>,
-    //     #[arg(short = 'c', long = "context")]
-    //     context: Option<String>,
-    // },
+    #[command(name = "ls")]
+    List {
+        #[arg(short = 'p', long = "project")]
+        project: Option<String>,
+        #[arg(short = 'c', long = "context")]
+        context: Option<String>,
+    },
 }
 
-pub fn dispatch(cli: Cli) {
+pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
     match cli.command {
         Commands::Add {
             todo,
             project,
             context,
         } => {
-            add_handler(todo, project, context).expect("error");
+            let todo = add_handler(todo, project, context)?;
+            println!("Add todo {}: {}", todo.id, todo.title);
+            Ok(())
         }
-        Commands::Priority { id, priority } => {
-            priority_handler(&id, priority);
+        Commands::List { project, context } => {
+            let todos = list_handler(project, context)?;
+            todos.iter().for_each(|todo| println!("{todo}"));
+            Ok(())
         }
     }
 }

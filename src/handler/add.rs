@@ -1,9 +1,12 @@
+use crate::Todo;
 use crate::util::{validated_keyword, write_to_toto_txt};
-use crate::{Todo, read_lines};
+use anyhow::{Context, Result};
 use chrono::Local;
+use std::fs;
+use std::path::Path;
 
-const PROJECT_PREFIX: &'static str = "@";
-const CONTEXT_PREFIX: &'static str = "+";
+const PROJECT_PREFIX: &str = "+";
+const CONTEXT_PREFIX: &str = "@";
 
 pub fn add_handler(
     todo: String,
@@ -36,16 +39,33 @@ pub fn add_handler(
         is_done: false,
     };
 
-    println!("{todo}");
-
     write_to_toto_txt(&todo)?;
 
     Ok(todo)
 }
 
-pub fn generate_todo_id() -> Result<u32, anyhow::Error> {
-    let lines = read_lines("todo.txt")?;
-    let mut counter = 1;
-    lines.for_each(|_| counter += 1);
-    Ok(counter)
+pub fn generate_todo_id() -> Result<u32> {
+    let path = Path::new("todo.json");
+
+    if !path.exists() {
+        return Ok(1); // ファイルがなければ ID = 1
+    }
+
+    let json_data = fs::read_to_string(path).context("Failed to read todo.json")?;
+
+    if json_data.trim().is_empty() {
+        return Ok(1); // 空ファイルなら ID = 1
+    }
+
+    let deserialized_json: Vec<Todo> =
+        serde_json::from_str(&json_data).context("Failed to parse todo.json as Vec<Todo>")?;
+
+    let next_id = deserialized_json
+        .into_iter()
+        .map(|todo| todo.id)
+        .max()
+        .unwrap_or(0)
+        + 1;
+
+    Ok(next_id)
 }

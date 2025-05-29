@@ -7,3 +7,5 @@ pub use cli::*;
 pub use handler::*;
 pub use model::*;
 pub use util::*;
+
+const TODO_PATH: &str = "todo.json";

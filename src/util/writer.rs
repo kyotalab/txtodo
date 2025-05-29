@@ -1,20 +1,19 @@
-use crate::model::Todo;
+use crate::util::load_todos;
+use crate::{TODO_PATH, model::Todo};
+use anyhow::{Context, Result};
+use std::fs;
 
-use std::fs::OpenOptions;
-use std::io::{BufWriter, Error, Write};
+pub fn write_to_toto_txt(todo: &Todo) -> Result<()> {
+    let mut todos = load_todos()?;
 
-pub fn write_to_toto_txt(todo: &Todo) -> Result<(), Error> {
-    let output = format!("{todo}\n");
+    // 2. 新しいTodoを追加
+    todos.push(todo.clone());
 
-    let f = OpenOptions::new()
-        .create(true)
-        .write(true)
-        .read(true)
-        .append(true)
-        .open("todo.txt")
-        .unwrap();
-    let mut bw = BufWriter::new(f);
+    // 3. Vec<Todo> をJSON文字列に変換
+    let json = serde_json::to_string_pretty(&todos).context("Failed to serialize todos")?;
 
-    bw.write(output.as_bytes()).unwrap();
+    // 4. ファイルに書き込む（全体を書き直し）
+    fs::write(TODO_PATH, json).context("Failed to write todo.json")?;
+
     Ok(())
 }

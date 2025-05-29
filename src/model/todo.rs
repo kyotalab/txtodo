@@ -1,8 +1,9 @@
 use std::fmt;
 
 use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Todo {
     pub id: u32,
     pub title: String,
@@ -15,7 +16,7 @@ pub struct Todo {
     pub is_done: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Priority {
     A,
     B,
