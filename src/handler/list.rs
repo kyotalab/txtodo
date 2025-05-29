@@ -3,7 +3,7 @@ use crate::{Todo, load_todos};
 pub fn list_handler(
     project: Option<String>,
     context: Option<String>,
-) -> Result<Vec<Todo>, anyhow::Error> {
+) -> Result<(Vec<Todo>, usize), anyhow::Error> {
     let todos = load_todos()?;
     if let Some(pj) = project {
         let filtered: Vec<_> = todos
@@ -25,7 +25,8 @@ pub fn list_handler(
         //         }
         //     }
         // }
-        return Ok(filtered);
+        let result = (filtered, todos.len());
+        return Ok(result);
     }
 
     if let Some(ctx) = context {
@@ -48,7 +49,8 @@ pub fn list_handler(
         //         }
         //     }
         // }
-        return Ok(filtered);
+        let result = (filtered, todos.len());
+        return Ok(result);
     }
 
     // let filtered: Vec<_> = todos
@@ -59,5 +61,12 @@ pub fn list_handler(
     // })
     // .collect();
 
-    Ok(todos)
+    let filtered: Vec<_> = todos
+        .clone()
+        .into_iter()
+        .filter(|todo| todo.is_done == false)
+        .collect();
+
+    let result = (filtered, todos.len());
+    Ok(result)
 }

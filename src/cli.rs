@@ -85,7 +85,9 @@ pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
         }
         Commands::List { project, context } => {
             let todos = list_handler(project, context)?;
-            todos.iter().for_each(|todo| println!("{todo}"));
+            todos.0.iter().for_each(|todo| print!("{todo}"));
+            println!("\n---");
+            println!("TODO: {} of {} tasks shown", todos.0.len(), todos.1);
             Ok(())
         }
     }
