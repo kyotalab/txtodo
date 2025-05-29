@@ -12,7 +12,7 @@ pub struct Todo {
     pub contexts: Vec<String>,
     pub due_date: Option<NaiveDate>,
     pub created_at: NaiveDateTime,
-    pub end_date: Option<NaiveDateTime>,
+    pub end_date: Option<NaiveDate>,
     pub is_done: bool,
 }
 
@@ -63,7 +63,7 @@ impl fmt::Display for Todo {
             write!(f, "({:?}) ", pri)?;
         }
         if let Some(end) = self.end_date {
-            write!(f, "{} ", NaiveDateTime::format(&end, "%Y-%m-%d"))?;
+            write!(f, "{} ", NaiveDate::format(&end, "%Y-%m-%d"))?;
         }
 
         write!(

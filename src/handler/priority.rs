@@ -20,7 +20,7 @@ pub fn priority_handler(id: &str, priority: String) -> Result<Option<Todo>> {
     save_todo_txt(todos)?;
 
     if updated_todo.is_none() {
-        println!("No ToDo found matching ID {}.", id);
+        println!("No TODO found matching ID {}.", id);
     }
 
     Ok(updated_todo)

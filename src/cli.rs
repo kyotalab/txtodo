@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 
-use crate::{add_handler, due_handler, list_handler, priority_handler};
+use crate::{add_handler, done_handler, due_handler, list_handler, priority_handler, todo};
 
 #[derive(Parser)]
 pub struct Cli {
@@ -30,10 +30,8 @@ pub enum Commands {
     //     project: Option<String>,
     //     context: Option<String>,
     // },
-    // #[command(name = "start")]
-    // Start { id: String },
-    // #[command(name = "done")]
-    // Done { id: String },
+    #[command(name = "done")]
+    Done { id: String },
     #[command(name = "ls")]
     List {
         #[arg(short = 'p', long = "project")]
@@ -74,6 +72,14 @@ pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
                     let due_date = due.format("%Y-%m-%d").to_string();
                     println!("TODO: {} due date set to {}.", exist.id, due_date);
                 }
+            }
+            Ok(())
+        }
+        Commands::Done { id } => {
+            let todo = done_handler(&id)?;
+            if let Some(exist) = todo {
+                println!("{exist}");
+                println!("TODO: {} id done.", exist.id);
             }
             Ok(())
         }
