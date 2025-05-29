@@ -3,7 +3,7 @@ use clap::{Parser, Subcommand};
 
 use crate::{
     add_handler, delete_handler, done_handler, due_handler, list_handler, modify_handler,
-    priority_handler, todo,
+    priority_handler,
 };
 
 #[derive(Parser)]
@@ -15,19 +15,23 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     #[command(name = "add")]
+    #[command(about = "Add a new todo item")]
     Add {
         todo: String,
         project: Option<String>,
         context: Option<String>,
     },
     #[command(name = "pri")]
+    #[command(about = "Set priority for a todo")]
     Priority { id: String, priority: String },
     #[command(name = "due")]
+    #[command(about = "Set due date for a todo")]
     Due {
         id: String,
         due_date: Option<String>, // 期限は設定してないけど、いずれやらないといけないtodoを表現できるようにOptionにする
     },
     #[command(name = "mod")]
+    #[command(about = "Modify a todo")]
     Modify {
         id: String,
         title: Option<String>,
@@ -35,8 +39,10 @@ pub enum Commands {
         context: Option<String>,
     },
     #[command(name = "done")]
+    #[command(about = "Mark a todo as completed")]
     Done { id: String },
     #[command(name = "ls")]
+    #[command(about = "List all todos")]
     List {
         #[arg(short = 'p', long = "project")]
         project: Option<String>,
@@ -44,6 +50,7 @@ pub enum Commands {
         context: Option<String>,
     },
     #[command(name = "del")]
+    #[command(about = "Delete a todo")]
     Delete { id: String },
 }
 
