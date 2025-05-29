@@ -5,8 +5,13 @@ pub fn list_handler(
     context: Option<String>,
 ) -> Result<(Vec<Todo>, usize), anyhow::Error> {
     let todos = load_todos()?;
+    let exist_todos: Vec<_> = todos
+        .iter()
+        .filter(|todo| !todo.deleted && !todo.is_done)
+        .cloned()
+        .collect();
     if let Some(pj) = project {
-        let filtered: Vec<_> = todos
+        let filtered: Vec<_> = exist_todos
             .iter()
             .filter(|todo| todo.projects.contains(&pj))
             .cloned()
@@ -30,7 +35,7 @@ pub fn list_handler(
     }
 
     if let Some(ctx) = context {
-        let filtered: Vec<_> = todos
+        let filtered: Vec<_> = exist_todos
             .iter()
             .filter(|todo| todo.contexts.contains(&ctx))
             .cloned()
@@ -61,7 +66,7 @@ pub fn list_handler(
     // })
     // .collect();
 
-    let filtered: Vec<_> = todos
+    let filtered: Vec<_> = exist_todos
         .clone()
         .into_iter()
         .filter(|todo| todo.is_done == false)
