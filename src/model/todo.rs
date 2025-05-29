@@ -55,6 +55,7 @@ pub fn parse_priority_to_enum(pri: &str) -> Result<Priority, PriorityParseError>
 
 impl fmt::Display for Todo {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use colored::Colorize;
         write!(f, "{} ", self.id)?;
         if self.is_done {
             write!(f, "x")?;
@@ -76,10 +77,10 @@ impl fmt::Display for Todo {
 
         let sep = String::from(",");
         let projects = self.projects.join(&sep);
-        write!(f, "{} ", projects)?;
+        write!(f, "{} ", projects.red())?;
 
         let contexts = self.contexts.join(&sep);
-        write!(f, "{} ", contexts)?;
+        write!(f, "{} ", contexts.red())?;
 
         if let Some(due) = self.due_date {
             writeln!(f, "due:{} ", NaiveDate::format(&due, "%Y-%m-%d"))?;

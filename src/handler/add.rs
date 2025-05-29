@@ -1,12 +1,10 @@
 use crate::Todo;
 use crate::util::{validated_keyword, write_to_toto_txt};
+use crate::{CONTEXT_PREFIX, PROJECT_PREFIX};
 use anyhow::{Context, Result};
 use chrono::Local;
 use std::fs;
 use std::path::Path;
-
-const PROJECT_PREFIX: &str = "+";
-const CONTEXT_PREFIX: &str = "@";
 
 pub fn add_handler(
     todo: String,

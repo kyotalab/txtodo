@@ -1,6 +1,6 @@
 use crate::{Todo, load_todos, save_todo_txt};
 use anyhow::{Context, Result};
-use chrono::{Local, NaiveDate};
+use chrono::Local;
 use std::str::FromStr;
 
 pub fn done_handler(id: &str) -> Result<Option<Todo>> {

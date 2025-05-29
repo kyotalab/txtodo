@@ -1,6 +1,9 @@
+use anyhow::Ok;
 use clap::{Parser, Subcommand};
 
-use crate::{add_handler, done_handler, due_handler, list_handler, priority_handler, todo};
+use crate::{
+    add_handler, done_handler, due_handler, list_handler, modify_handler, priority_handler,
+};
 
 #[derive(Parser)]
 pub struct Cli {
@@ -23,13 +26,13 @@ pub enum Commands {
         id: String,
         due_date: Option<String>, // 期限は設定してないけど、いずれやらないといけないtodoを表現できるようにOptionにする
     },
-    // #[command(name = "mod")]
-    // Modify {
-    //     id: String,
-    //     todo: Option<String>,
-    //     project: Option<String>,
-    //     context: Option<String>,
-    // },
+    #[command(name = "mod")]
+    Modify {
+        id: String,
+        title: Option<String>,
+        project: Option<String>,
+        context: Option<String>,
+    },
     #[command(name = "done")]
     Done { id: String },
     #[command(name = "ls")]
@@ -75,11 +78,27 @@ pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
             }
             Ok(())
         }
+        Commands::Modify {
+            id,
+            title,
+            project,
+            context,
+        } => {
+            let todo = modify_handler(&id, title, project, context)?;
+            if let Some(before) = todo.0 {
+                println!("{before}");
+            }
+            if let Some(updated) = todo.1 {
+                println!("TODO: {} is modified with:", updated.id);
+                println!("{updated}");
+            }
+            Ok(())
+        }
         Commands::Done { id } => {
             let todo = done_handler(&id)?;
             if let Some(exist) = todo {
                 println!("{exist}");
-                println!("TODO: {} id done.", exist.id);
+                println!("TODO: {} is done.", exist.id);
             }
             Ok(())
         }
