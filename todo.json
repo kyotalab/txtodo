@@ -1,28 +1,18 @@
 [
   {
     "id": 1,
-    "title": "This is a todo",
-    "priority": "A",
+    "title": "task1",
+    "priority": null,
     "projects": [
-      "+project"
+      "+cli-project"
     ],
     "contexts": [
-      "@rust"
+      "@self-improvement"
     ],
-    "due_date": "2025-10-31",
-    "created_at": "2025-05-29T12:47:15.879277",
-    "end_date": "2025-05-29",
-    "is_done": true
-  },
-  {
-    "id": 2,
-    "title": "modified",
-    "priority": null,
-    "projects": [],
-    "contexts": [],
     "due_date": null,
-    "created_at": "2025-05-29T14:07:55.850151",
+    "created_at": "2025-05-29T16:45:27.919275",
     "end_date": null,
-    "is_done": false
+    "is_done": false,
+    "deleted": true
   }
 ]

@@ -35,6 +35,7 @@ pub fn add_handler(
         created_at: Local::now().naive_local(),
         end_date: None,
         is_done: false,
+        deleted: false,
     };
 
     write_to_toto_txt(&todo)?;

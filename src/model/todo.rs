@@ -14,6 +14,7 @@ pub struct Todo {
     pub created_at: NaiveDateTime,
     pub end_date: Option<NaiveDate>,
     pub is_done: bool,
+    pub deleted: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

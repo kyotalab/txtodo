@@ -2,7 +2,8 @@ use anyhow::Ok;
 use clap::{Parser, Subcommand};
 
 use crate::{
-    add_handler, done_handler, due_handler, list_handler, modify_handler, priority_handler,
+    add_handler, delete_handler, done_handler, due_handler, list_handler, modify_handler,
+    priority_handler, todo,
 };
 
 #[derive(Parser)]
@@ -42,6 +43,8 @@ pub enum Commands {
         #[arg(short = 'c', long = "context")]
         context: Option<String>,
     },
+    #[command(name = "del")]
+    Delete { id: String },
 }
 
 pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
@@ -107,6 +110,13 @@ pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
             todos.0.iter().for_each(|todo| print!("{todo}"));
             println!("\n---");
             println!("TODO: {} of {} tasks shown", todos.0.len(), todos.1);
+            Ok(())
+        }
+        Commands::Delete { id } => {
+            if let Some(deleted) = delete_handler(&id)? {
+                println!("{} {}", deleted.id, deleted.title);
+                println!("TODO: {} deleted.", deleted.id);
+            }
             Ok(())
         }
     }
