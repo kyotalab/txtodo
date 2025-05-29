@@ -17,3 +17,12 @@ pub fn write_to_toto_txt(todo: &Todo) -> Result<()> {
 
     Ok(())
 }
+
+pub fn save_todo_txt(todos: Vec<Todo>) -> Result<()> {
+    let json = serde_json::to_string_pretty(&todos).context("Failed to serialize todos")?;
+
+    // 4. ファイルに書き込む（全体を書き直し）
+    fs::write(TODO_PATH, json).context("Failed to write todo.json")?;
+
+    Ok(())
+}

@@ -14,7 +14,7 @@ pub fn list_handler(
 
         if filtered.is_empty() {
             println!(
-                "⚠️ There are no matching todos for the specified project '{}'. ",
+                "There are no matching todos for the specified project '{}'. ",
                 pj
             );
         }
@@ -37,7 +37,7 @@ pub fn list_handler(
 
         if filtered.is_empty() {
             println!(
-                "⚠️ There are no matching todos for the specified context '{}'. ",
+                "There are no matching todos for the specified context '{}'. ",
                 ctx
             );
         }

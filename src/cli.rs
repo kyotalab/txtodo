@@ -16,11 +16,8 @@ pub enum Commands {
         project: Option<String>,
         context: Option<String>,
     },
-    // #[command(name = "pri")]
-    // Priority {
-    //     id: String,
-    //     priority: Option<String>, // 優先度はOption
-    // },
+    #[command(name = "pri")]
+    Priority { id: String, priority: String },
     // #[command(name = "due")]
     // Due {
     //     id: String,
@@ -55,6 +52,13 @@ pub fn dispatch(cli: Cli) -> Result<(), anyhow::Error> {
         } => {
             let todo = add_handler(todo, project, context)?;
             println!("Add todo {}: {}", todo.id, todo.title);
+            Ok(())
+        }
+        Commands::Priority { id, priority } => {
+            let todo = priority_handler(&id, priority)?;
+            if let Some(exist) = todo {
+                println!("{exist}");
+            }
             Ok(())
         }
         Commands::List { project, context } => {

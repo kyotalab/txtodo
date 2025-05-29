@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "This is a todo",
-    "priority": null,
+    "priority": "B",
     "projects": [
       "+project"
     ],
